@@ -19,16 +19,19 @@ func main() {
 	e.Use(middleware.Recover())
 
 	// Define the HTTP routes
+	e.POST("/polls/", func(c echo.Context) error {
+		return c.JSON(200, "POST Success")
+	})
 	e.GET("/polls", func(c echo.Context) error {
-		return c.JSON(200, "GET Polls")
+		return c.JSON(200, "GET Success")
 	})
 
 	e.PUT("/polls", func(c echo.Context) error {
-		return c.JSON(200, "PUT Polls")
+		return c.JSON(200, "PUT Success")
 	})
 
 	e.PUT("/polls/:id", func(c echo.Context) error {
-		return c.JSON(200, "UPDATE Poll "+c.Param("id"))
+		return c.JSON(200, "UPDATE Success "+" "+c.Param("id"))
 	})
 
 	// Start server
