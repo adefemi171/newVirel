@@ -1,12 +1,9 @@
 package main
 
 import (
-	// "database/sql"
-
-	// "database/sql"
-
-	// "github.com/adefemi171/newVirel/handlers"
 	"database/sql"
+
+	"github.com/adefemi171/newVirel/handlers"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -25,20 +22,24 @@ func main() {
 	migrate(db)
 
 	// Define the HTTP routes
-	e.POST("/polls/", func(c echo.Context) error {
-		return c.JSON(200, "POST Success")
-	})
-	e.GET("/polls", func(c echo.Context) error {
-		return c.JSON(200, "GET Success")
-	})
+	e.File("/", "public/index.html")
+	e.GET("/polls", handlers.GetPolls(db))
+	e.PUT("/poll/:index", handlers.UpdatePoll(db))
 
-	e.PUT("/polls", func(c echo.Context) error {
-		return c.JSON(200, "PUT Success")
-	})
+	// e.POST("/polls/", func(c echo.Context) error {
+	// 	return c.JSON(200, "POST Success")
+	// })
+	// e.GET("/polls", func(c echo.Context) error {
+	// 	return c.JSON(200, "GET Success")
+	// })
 
-	e.PUT("/polls/:id", func(c echo.Context) error {
-		return c.JSON(200, "UPDATE Success "+" "+c.Param("id"))
-	})
+	// e.PUT("/polls", func(c echo.Context) error {
+	// 	return c.JSON(200, "PUT Success")
+	// })
+
+	// e.PUT("/polls/:id", func(c echo.Context) error {
+	// 	return c.JSON(200, "UPDATE Success "+" "+c.Param("id"))
+	// })
 
 	// Start server
 	e.Logger.Fatal(e.Start(":9000"))
@@ -58,7 +59,7 @@ func initDB(filepath string) *sql.DB {
 func migrate(db *sql.DB) {
 	sql := `
 		CREATE TABLE IF NOT EXISTS polls(
-			mat_no INTEGER NOT NULL PRIMARY KEY,
+			id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 			f_name VARCHAR NOT NULL,
 			m_name  VARCHAR,
 			l_name VARCHAR NOT NULL,
@@ -69,8 +70,8 @@ func migrate(db *sql.DB) {
 
 		);
 
-		INSERT OR IGNORE INTO polls(mat_no, f_name, m_name, l_name, img, upvotes, downvotes) VALUES(206323, 'Adefemi', 'Micheal', 'Afuwape', './img/adefemi.png', 1, 0);
-		INSERT OR IGNORE INTO polls(mat_no, f_name, m_name, l_name, img, upvotes, downvotes) VALUES(200489, 'Bayonle', ' ', 'Adeyemi', '', './img/adefemi.png', 1, 0);
+		INSERT OR IGNORE INTO polls(f_name, m_name, l_name, img, upvotes, downvotes) VALUES('Adefemi', 'Micheal', 'Afuwape', './img/adefemi.png', 1, 0);
+		INSERT OR IGNORE INTO polls(f_name, m_name, l_name, img, upvotes, downvotes) VALUES('Bayonle', ' ', 'Adeyemi', './img/adefemi.png', 1, 0);
 	`
 	_, err := db.Exec(sql)
 
